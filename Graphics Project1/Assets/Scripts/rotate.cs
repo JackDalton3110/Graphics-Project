@@ -19,13 +19,8 @@ public class rotate : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        if (Input.GetKeyDown(key:KeyCode.LeftArrow))
-        {
-          
-            transform.RotateAround(target.position, Vector3.left, -90);
-        }
 
-        if (Input.GetKeyDown(key: KeyCode.RightArrow))
+        if (Input.GetKeyDown(key: KeyCode.UpArrow))
         {
            
             transform.RotateAround(target.position, Vector3.left, 90);
