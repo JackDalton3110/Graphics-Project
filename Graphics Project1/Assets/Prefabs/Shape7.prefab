@@ -38,9 +38,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4363918247906296}
   - component: {fileID: 114306405903307670}
+  - component: {fileID: 114798892756160286}
   m_Layer: 0
   m_Name: Shape7
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -384,3 +385,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4711637008489706}
+--- !u!114 &114798892756160286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1526954919831428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab7860bbf3f6664da42e82d81535491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
