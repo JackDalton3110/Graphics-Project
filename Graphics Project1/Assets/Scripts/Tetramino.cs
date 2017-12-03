@@ -9,14 +9,32 @@ public class Tetramino : MonoBehaviour {
     public bool allowRotation = true;
     public bool limitRotation = false;
 
+    public int blockScore = 100;
+
+    public float blockScoreTime;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
+
+    void UpdateBlockScore()
+    {
+        if(blockScoreTime<1)
+        {
+            blockScoreTime += Time.deltaTime;
+        }
+        else
+        {
+            blockScoreTime = 0;
+            blockScore = Mathf.Max(blockScore - 10, 0);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
         CheckUserInput();
+        UpdateBlockScore();
 	}
     void CheckUserInput()
     {
@@ -111,7 +129,14 @@ public class Tetramino : MonoBehaviour {
                 FindObjectOfType<Game>().updateGrid(this);
                 FindObjectOfType<Game>().DeleteRow();
 
+                if(FindObjectOfType<Game>().CheckIsAboveGrid(this))
+                {
+                    FindObjectOfType<Game>().Gameover();
+                }
+
                 FindObjectOfType< Game > ().SpawnNextTetromino();
+
+                Game.currentScore += blockScore;
             }
             fall = Time.time;
         }

@@ -1,17 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour {
 
     public static int gridHeight = 20;
     public static int gridWidth = 10;
 
+    public int oneLine = 40;
+    public int twoLines = 100;
+    public int threeLines = 300;
+    public int fourLines = 1200;
+
+    public Text Score;
+
+    private int numOfRows = 0;
+
+    public static int currentScore = 0;
+
     public static Transform[,] grid = new Transform[gridWidth, gridHeight];
 	// Use this for initialization
 	void Start () {
         SpawnNextTetromino();
 	}
+
+    public bool CheckIsAboveGrid(Tetramino tetromino)
+    {
+        for (int x = 0; x<gridWidth; x++)
+        {
+            foreach (Transform mino in tetromino.transform)
+            {
+                Vector2 pos = Round(mino.position);
+                if(pos.y > gridHeight -1)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public bool IsFullRowAt(int y)
     {
@@ -22,7 +50,7 @@ public class Game : MonoBehaviour {
                 return false;
             }
         }
-
+        numOfRows++;
         return true;
     }
     public void DeleteMinoAt(int y)
@@ -151,10 +179,70 @@ public class Game : MonoBehaviour {
         }
         return randomTetrominoName;
     }
+
+    public void Gameover()
+    {
+        Application.LoadLevel("GameOver");
+    }
+
+
     public void SpawnNextTetromino()
     {
         GameObject nextTetremino = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), new Vector3(5.0f, 20.0f, 0.0f), Quaternion.identity);
     }
 
-    
+    public void UpdateScore()
+    {
+        if (numOfRows>0)
+        {
+            if(numOfRows==1)
+            {
+                ClearedOne();
+            }
+            else if(numOfRows==2)
+            {
+                CleareTwo();
+            }
+            else if (numOfRows == 3)
+            {
+                ClearedThree();
+            }
+            else if (numOfRows == 4)
+            {
+                ClearedFour();
+            }
+
+            numOfRows = 0;
+        }
+    }
+
+    void ClearedOne()
+    {
+        currentScore += oneLine;
+    }
+
+    void CleareTwo()
+    {
+        currentScore += twoLines;
+    }
+    void ClearedThree()
+    {
+        currentScore += threeLines;
+    }
+    void ClearedFour()
+    {
+        currentScore += fourLines;
+    }
+
+    private void Update()
+    {
+        UpdateScore();
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        Score.text = currentScore.ToString();
+    }
+
 }
