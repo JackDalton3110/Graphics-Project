@@ -105,7 +105,7 @@ public class Tetramino : MonoBehaviour {
                     }
                     else
                     {
-                        transform.Rotate(0, 0, 90);
+                        transform.Rotate(0, 0, -90);
                     }
                    
                 }
