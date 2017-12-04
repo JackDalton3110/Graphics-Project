@@ -13,7 +13,13 @@ public class Game : MonoBehaviour {
     public int threeLines = 300;
     public int fourLines = 1200;
 
+    public int currentLevel = 0;
+    private int numLinesCleared = 0;
+    public float fallSpeed = 1.0f;
+
     public Text Score;
+    public Text Level;
+    public Text LinesCleared;
 
     private int numOfRows = 0;
 
@@ -24,7 +30,31 @@ public class Game : MonoBehaviour {
 	void Start () {
         SpawnNextTetromino();
 	}
+    void Update()
+    {
+        UpdateLevel();
 
+        UpdateSpeed();
+        UpdateScore();
+        UpdateUI();
+        
+    }
+    //To update the current level
+    void UpdateLevel()
+    {
+        currentLevel = numLinesCleared / 7;
+        Debug.Log("Current Level: " + currentLevel);
+
+    }
+    void UpdateSpeed()
+    {
+        fallSpeed = 1.0f - ((float)currentLevel * 0.1f);
+        Debug.Log("Current Speed: " + fallSpeed);
+    }
+    public float getFallSpeed()
+    {
+        return fallSpeed;
+    }
     public bool CheckIsAboveGrid(Tetramino tetromino)
     {
         for (int x = 0; x<gridWidth; x++)
@@ -218,31 +248,37 @@ public class Game : MonoBehaviour {
 
     void ClearedOne()
     {
-        currentScore += oneLine;
+        currentScore += oneLine  + (currentLevel * 20);
+        numLinesCleared += 1;
     }
 
     void CleareTwo()
     {
-        currentScore += twoLines;
+        currentScore += twoLines + (currentLevel * 25);
+        numLinesCleared += 2;
     }
     void ClearedThree()
     {
-        currentScore += threeLines;
+        currentScore += threeLines +(currentLevel * 30);
+        numLinesCleared += 3;
     }
     void ClearedFour()
     {
-        currentScore += fourLines;
+        currentScore += fourLines + (currentLevel * 40);
+        numLinesCleared += 4;
     }
 
-    private void Update()
-    {
-        UpdateScore();
-        UpdateUI();
-    }
+   // private void Update()
+    //{
+      //  UpdateScore();
+      //  UpdateUI();
+   // }
 
     public void UpdateUI()
     {
         Score.text = currentScore.ToString();
+        Level.text = currentLevel.ToString();
+        LinesCleared.text = numLinesCleared.ToString();
     }
 
 }

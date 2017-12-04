@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tetramino : MonoBehaviour {
 
     float fall = 0;
-    public float fallSpeed = 1;
+    private float fallSpeed;
     public bool allowRotation = true;
     public bool limitRotation = false;
 
@@ -26,8 +26,10 @@ public class Tetramino : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+
+        fallSpeed = GameObject.Find("Grid").GetComponent<Game>().fallSpeed;
+
+    }
 
     void UpdateBlockScore()
     {
