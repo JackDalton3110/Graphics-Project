@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Aaron Curry, Jack Dalton
+ * Date: 2/12/2017-04/12/2017
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +14,7 @@ public class Game : MonoBehaviour {
     public static int gridHeight = 20;
     public static int gridWidth = 10;
 
+    //Score values for line destruction
     public int oneLine = 40;
     public int twoLines = 100;
     public int threeLines = 300;
@@ -33,12 +39,14 @@ public class Game : MonoBehaviour {
 
 
     public static Transform[,] grid = new Transform[gridWidth, gridHeight];
+
 	// Use this for initialization
 	void Start () {
         SpawnNextTetromino();
         audioSource = GetComponent<AudioSource>();
 	}
 
+    //Checks if blocks are above grid for game over
     public bool CheckIsAboveGrid(Tetramino tetromino)
     {
         for (int x = 0; x<gridWidth; x++)
@@ -55,6 +63,7 @@ public class Game : MonoBehaviour {
         return false;
     }
 
+    //Checks is row full
     public bool IsFullRowAt(int y)
     {
         for (int x = 0; x < gridWidth; ++x)
@@ -67,6 +76,8 @@ public class Game : MonoBehaviour {
         numOfRows++;
         return true;
     }
+
+    //Deletes blocks
     public void DeleteMinoAt(int y)
     {
         for (int x = 0; x < gridWidth; ++x)
@@ -75,6 +86,7 @@ public class Game : MonoBehaviour {
             grid[x, y] = null;
         }
     }
+    //Moves rows down after row beneath has been destroyed
     public void MoveRowDown(int y)
     {
         for (int x = 0; x < gridWidth; ++x)
@@ -194,16 +206,18 @@ public class Game : MonoBehaviour {
         return randomTetrominoName;
     }
 
+    //Ends game
     public void Gameover()
     {
       SceneManager.LoadScene("GameOver");
     }
 
-
+    //Sapwns new shape
     public void SpawnNextTetromino()
     {
         if(!gameStarted)
         {
+            //Sets new block and preview block before game starts
             gameStarted = true;
             nextShape = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), new Vector3(5.0f, 20.0f, 0.0f), Quaternion.identity);
             preview = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), previewPos, Quaternion.identity);
@@ -211,6 +225,7 @@ public class Game : MonoBehaviour {
         }
         else
         {
+            //sets preview block as new shape and gets new preview shape
             preview.transform.localPosition = new Vector3(5.0f, 20.0f, 0.0f);
             nextShape = preview;
             nextShape.GetComponent<Tetramino>().enabled = true;
@@ -220,6 +235,7 @@ public class Game : MonoBehaviour {
         }
     }
 
+    //Updates score after rows have been deleted
     public void UpdateScore()
     {
         if (numOfRows>0)
@@ -247,12 +263,13 @@ public class Game : MonoBehaviour {
        
     }
 
+    //Plays audio when line is cleared
     public void ClearLineAudio()
     {
         audioSource.PlayOneShot(removeLine);
     }
 
-
+    //changes current score when line is cleared
     void ClearedOne()
     {
         currentScore += oneLine;
@@ -271,12 +288,14 @@ public class Game : MonoBehaviour {
         currentScore += fourLines;
     }
 
+    //Update text
     private void Update()
     {
         UpdateScore();
         UpdateUI();
     }
 
+    //Sends score to string
     public void UpdateUI()
     {
         Score.text = currentScore.ToString();

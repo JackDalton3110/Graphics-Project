@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+ * Author: Aaron Curry, Jack Dalton
+ * Date: 02/12/2017
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +25,7 @@ public class Tetramino : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //initialise audioSource
         audioSource = GetComponent<AudioSource>();
 	}
 
@@ -50,6 +56,7 @@ public class Tetramino : MonoBehaviour {
             if (CheckIsValidPosition())
             {
                 // FindObjectOfType<Game>().updateGrid(this);
+                //plays audio when shape is moved
                 moveAudio();
             }
             else
@@ -95,6 +102,7 @@ public class Tetramino : MonoBehaviour {
                 if (CheckIsValidPosition())
                 {
                     //FindObjectOfType<Game>().updateGrid(this);
+                    //plays audio when shape is rotated
                     rotateAudio();
                 }
                //Stops rotating out of grid
