@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour {
 
@@ -19,10 +20,23 @@ public class Game : MonoBehaviour {
 
     public static int currentScore = 0;
 
+    private GameObject preview;
+    private GameObject nextShape;
+
+    private bool gameStarted = false;
+
+    private Vector3 previewPos = new Vector3(-6.5f, 15f, 0.0f);
+
+    private AudioSource audioSource;
+    public AudioClip removeLine;
+
+
+
     public static Transform[,] grid = new Transform[gridWidth, gridHeight];
 	// Use this for initialization
 	void Start () {
         SpawnNextTetromino();
+        audioSource = GetComponent<AudioSource>();
 	}
 
     public bool CheckIsAboveGrid(Tetramino tetromino)
@@ -58,7 +72,6 @@ public class Game : MonoBehaviour {
         for (int x = 0; x < gridWidth; ++x)
         {
             Destroy(grid[x, y].gameObject);
-
             grid[x, y] = null;
         }
     }
@@ -80,6 +93,7 @@ public class Game : MonoBehaviour {
         for (int i = y; i < gridHeight; ++i)
         {
             MoveRowDown(i);
+            
         }
 
 
@@ -92,7 +106,7 @@ public class Game : MonoBehaviour {
             {
                 DeleteMinoAt(y);
                 MoveAllRowsDown(y + 1);
-
+               
                 --y;
             }
         }
@@ -182,13 +196,28 @@ public class Game : MonoBehaviour {
 
     public void Gameover()
     {
-        Application.LoadLevel("GameOver");
+      SceneManager.LoadScene("GameOver");
     }
 
 
     public void SpawnNextTetromino()
     {
-        GameObject nextTetremino = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), new Vector3(5.0f, 20.0f, 0.0f), Quaternion.identity);
+        if(!gameStarted)
+        {
+            gameStarted = true;
+            nextShape = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), new Vector3(5.0f, 20.0f, 0.0f), Quaternion.identity);
+            preview = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), previewPos, Quaternion.identity);
+            preview.GetComponent<Tetramino>().enabled=false;
+        }
+        else
+        {
+            preview.transform.localPosition = new Vector3(5.0f, 20.0f, 0.0f);
+            nextShape = preview;
+            nextShape.GetComponent<Tetramino>().enabled = true;
+
+            preview = (GameObject)Instantiate(Resources.Load(GetRandomTetrimino(), typeof(GameObject)), previewPos, Quaternion.identity);
+            preview.GetComponent<Tetramino>().enabled = false;
+        }
     }
 
     public void UpdateScore()
@@ -213,8 +242,16 @@ public class Game : MonoBehaviour {
             }
 
             numOfRows = 0;
+            ClearLineAudio();
         }
+       
     }
+
+    public void ClearLineAudio()
+    {
+        audioSource.PlayOneShot(removeLine);
+    }
+
 
     void ClearedOne()
     {
