@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tetramino : MonoBehaviour {
 
+    private AudioSource audioSource;
     float fall = 0;
     private float fallSpeed;
     public bool allowRotation = true;
@@ -12,7 +13,6 @@ public class Tetramino : MonoBehaviour {
     public int blockScore = 100;
 
     public float blockScoreTime;
-
     private float continuousVerticalSpeed = 0.05f; //Speed the tetromino moves when the down button is held 
     private float coninuousHorizontalSpeed = 0.1f; // Speed at which the teromino will move when the left or right 
     private float buttonDownWait = 0.2f; //How long to wait befor the shape starts moving when it recognizes a button is held
@@ -24,10 +24,14 @@ public class Tetramino : MonoBehaviour {
     private bool movedImmediateHorizontal = false;
     private bool movedImmediateVertical = false;
 
+    public AudioClip move;
+    public AudioClip rotate;
+
     // Use this for initialization
     void Start () {
 
         fallSpeed = GameObject.Find("Grid").GetComponent<Game>().fallSpeed;
+        audioSource = GetComponent<AudioSource>();
 
     }
 
@@ -91,7 +95,8 @@ public class Tetramino : MonoBehaviour {
 
             if (CheckIsValidPosition())
             {
-               // FindObjectOfType<Game>().updateGrid(this);
+                // FindObjectOfType<Game>().updateGrid(this);
+                moveAudio();
             }
             else
             {
@@ -125,7 +130,8 @@ public class Tetramino : MonoBehaviour {
 
             if (CheckIsValidPosition())
             {
-               // FindObjectOfType<Game>().updateGrid(this);
+                // FindObjectOfType<Game>().updateGrid(this);
+                moveAudio();
             }
             else
             {
@@ -141,7 +147,7 @@ public class Tetramino : MonoBehaviour {
                     if (transform.rotation.eulerAngles.z >= 90)
                     {
                         transform.Rotate(0, 0, -90);
-
+                        
                     }
                     else
                     {
@@ -155,6 +161,7 @@ public class Tetramino : MonoBehaviour {
                 if (CheckIsValidPosition())
                 {
                     //FindObjectOfType<Game>().updateGrid(this);
+                    rotateAudio();
                 }
                //Stops rotating out of grid
                 else
@@ -205,20 +212,24 @@ public class Tetramino : MonoBehaviour {
             transform.position += new Vector3(0, -1, 0);
             if (CheckIsValidPosition())
             {
-              //  FindObjectOfType<Game>().updateGrid(this);
+                //  FindObjectOfType<Game>().updateGrid(this);
+                moveAudio();
             }
             else
             {
                 
                 transform.position += new Vector3(0, 1, 0);
                 
+                
                 enabled = false;
                 FindObjectOfType<Game>().updateGrid(this);
                 FindObjectOfType<Game>().DeleteRow();
+                
 
                 if(FindObjectOfType<Game>().CheckIsAboveGrid(this))
                 {
                     FindObjectOfType<Game>().Gameover();
+                    
                 }
 
                 FindObjectOfType< Game > ().SpawnNextTetromino();
@@ -229,6 +240,19 @@ public class Tetramino : MonoBehaviour {
         }
     }
 
+    void moveAudio()
+    {
+        audioSource.PlayOneShot(move);
+
+    }
+
+    void rotateAudio()
+    {
+        audioSource.PlayOneShot(rotate);
+
+    }
+
+   
     //Checl position of each mino (child)
     bool CheckIsValidPosition()
     {
